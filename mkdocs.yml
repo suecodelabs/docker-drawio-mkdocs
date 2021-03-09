@@ -1,0 +1,60 @@
+site_name: Template - MkDocs
+site_author: Sue B.V.
+copyright: Copyright &copy; 2021 by Sue B.V.
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
+      lang: 
+        - nl
+        - en
+  - git-revision-date-localized:
+      type: timeago
+  - awesome-pages
+  - minify:
+      minifi_html: true
+  - drawio-exporter:
+      drawio_args:
+        - --no-sandbox
+markdown_extensions:
+  - admonition
+  - attr_list
+  - codehilite:
+       linenums: true
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+theme:
+  name: 'material'
+  favicon: 'images/logo.png'
+  features:
+    - search.highlight
+  language: 'nl'
+  icon:
+    logo: material/book
+  palette:
+    primary: indigo
+    accent: indigo
+  font:
+    text: Nunito
+    code: Anonymous Pro
+  language: 'nl'
+extra_css:
+    - 'stylesheets/docs.css'
+repo_name: Sue-unix-experts/docker-drawio-mkdocs
+repo_url: https://github.com/Sue-unix-experts/docker-drawio-mkdocs
