@@ -16,17 +16,23 @@ Log() {
 # Main
 ###
 DOCS_DIR="${1}:${PWD}"
-source /etc/os-release
+LINUX_RELEASE="/etc/os-release"
 
-# On Red Hat family systems, detect if selinux is enabled
-# and set VOLUME_ARGS to :z
-case "${NAME,,}" in
-  fedora|redhat|centos)
-    if [[ $(getenforce) == "Enforcing" ]]; then
-      VOLUME_ARGS=":z"
-    fi
-  ;;
-esac
+if [ -d "/Library/Apple" ]; then
+  export NAME="Apple"
+elif [ -f ${LINUX_RELEASE} ]; then
+  source /etc/os-release
+
+  # On Red Hat family systems, detect if selinux is enabled
+  # and set VOLUME_ARGS to :z
+  case "${NAME,,}" in
+    fedora|redhat|centos)
+      if [[ $(getenforce) == "Enforcing" ]]; then
+        VOLUME_ARGS=":z"
+      fi
+    ;;
+  esac
+fi
 
 if [[ $(which podman 2>/dev/null) ]]; then
   CRE="podman"

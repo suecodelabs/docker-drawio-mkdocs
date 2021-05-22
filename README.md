@@ -14,7 +14,7 @@ Requires `docker` and `git` commands to be available.
 
 ## drawio?
 
-[drawio](https://draw.io) is a neat solution to draw your images and save them to XML, SVG or binary formats (such as PNG).
+[diagrams.net (drawio)](https://app.diagrams.net) is a neat solution to draw your images and save them to XML, SVG or binary formats (such as PNG).
 
 Files generated using draw.io and saved as XML into `{filename}.drawio` will be converted into an `svg` file.
 

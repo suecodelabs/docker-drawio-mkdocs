@@ -3,7 +3,7 @@ name: Build and Test
 env:
   # Change cache version if running into issues
   # Github forces fresh environment every 7 days or when the identifier changes
-  CACHE_VERSION: 3
+  CACHE_VERSION: 1
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
   docker-build:
     runs-on: ubuntu-latest
-    name: Build container on ubuntu
+    name: Build and test container on ubuntu
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,13 +33,13 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: false
-          tags: mkdocs:test
+          tags: mkdocs
       - name: Delete svgs if existing (in cache)
         run: |
           rm site/*drawio*svg || true
-      - name: Test static site creation
+      - name: Test using update script
         run: |
-          docker run --rm --volume "${PWD}":/srv/mkdocs -i mkdocs:test "./run-inside-container.sh"
+          ./update.sh
       - name: Show created svg
         run: |
           test -f site/example.drawio-0.svg
