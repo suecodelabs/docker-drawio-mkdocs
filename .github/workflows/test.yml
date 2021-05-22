@@ -28,7 +28,7 @@ jobs:
           docker build --file Dockerfile --tag mkdocs/test .
       - name: Test static site creation
         run: |
-          docker run --rm --volume "(pwd)":/srv/mkdocs -i mkdocs/test "./run-inside-container.sh"
+          docker run --rm --volume ./:/srv/mkdocs -i mkdocs/test "./run-inside-container.sh"
       - name: Show created svg
         run: |
           ls site/example.drawio*svg
