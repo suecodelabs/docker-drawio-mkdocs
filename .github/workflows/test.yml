@@ -34,7 +34,8 @@ jobs:
 
   docker-test:
     runs-on: ubuntu-latest
-    name: Build container on ubuntu
+    name: Test container on ubuntu
+    needs: docker-build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
