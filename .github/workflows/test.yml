@@ -3,7 +3,7 @@ name: Build and Test
 env:
   # Change cache version if running into issues
   # Github forces fresh environment every 7 days or when the identifier changes
-  CACHE_VERSION: 1
+  CACHE_VERSION: 3
 
 on:
   push:
@@ -28,37 +28,18 @@ jobs:
             hashFiles('~/Dockerfile') }}
           restore-keys: |
             ${{ env.CACHE_VERSION}}-${{ runner.os }}-ubuntu
-      - name: Create local mkdocs/test image
-        run: |
-          docker build --file Dockerfile --tag mkdocs/test .
-
-  docker-test:
-    runs-on: ubuntu-latest
-    name: Test container on ubuntu
-    needs: docker-build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Restore base ubuntu environment
-        id: cache-ubuntu
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-ubuntu
+      - name: Build but not push
+        id: docker_build
+        uses: docker/build-push-action@v2
         with:
-          path: ~/
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-ubuntu-${{
-            hashFiles('~/Dockerfile') }}
-          restore-keys: |
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-ubuntu
-      - name: Fail job if  cache restore failed
-        if: steps.cache-ubuntu.outputs.cache-hit != 'true'
+          push: false
+          tags: mkdocs:test
+      - name: Delete svgs if existing (in cache)
         run: |
-          echo "Failed to restore ubuntu container build environment"
-          exit 1
+          rm site/*drawio*svg || true
       - name: Test static site creation
         run: |
-          docker run --rm --volume ./:/srv/mkdocs -i mkdocs/test "./run-inside-container.sh"
+          docker run --rm --volume "${PWD}":/srv/mkdocs -i mkdocs:test "./run-inside-container.sh"
       - name: Show created svg
         run: |
-          ls site/example.drawio*svg
+          test -f site/example.drawio-0.svg
