@@ -31,6 +31,30 @@ jobs:
       - name: Create local mkdocs/test image
         run: |
           docker build --file Dockerfile --tag mkdocs/test .
+
+  docker-test:
+    runs-on: ubuntu-latest
+    name: Build container on ubuntu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Restore base ubuntu environment
+        id: cache-ubuntu
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-ubuntu
+        with:
+          path: ~/
+          key: >-
+            ${{ env.CACHE_VERSION}}-${{ runner.os }}-ubuntu-${{
+            hashFiles('~/Dockerfile') }}
+          restore-keys: |
+            ${{ env.CACHE_VERSION}}-${{ runner.os }}-ubuntu
+      - name: Fail job if  cache restore failed
+        if: steps.cache-ubuntu.outputs.cache-hit != 'true'
+        run: |
+          echo "Failed to restore ubuntu container build environment"
+          exit 1
       - name: Test static site creation
         run: |
           docker run --rm --volume ./:/srv/mkdocs -i mkdocs/test "./run-inside-container.sh"
