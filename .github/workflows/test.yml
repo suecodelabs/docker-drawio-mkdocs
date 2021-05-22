@@ -1,0 +1,35 @@
+name: Build and Test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    name: Build container on ubuntu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+      - name: Restore base ubuntu environment
+        id: cache-ubuntu
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-ubuntu
+        with:
+          path: ~/
+          key: >-
+            ${{ runner.os }}-ubuntu-${{
+            hashFiles('~/Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-ubuntu
+      - name: Create local mkdocs/test image
+        run: |
+          docker build --file Dockerfile --tag mkdocs/test .
+      - name: Test static site creation
+        run: |
+          docker run --rm --volume "(pwd)":/srv/mkdocs -i mkdocs/test "./run-inside-container.sh"
+      - name: Show created svg
+        run: |
+          ls site/example.drawio*svg
