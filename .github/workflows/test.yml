@@ -11,7 +11,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up QEMU
       - name: Restore base ubuntu environment
         id: cache-ubuntu
         uses: actions/cache@v2
