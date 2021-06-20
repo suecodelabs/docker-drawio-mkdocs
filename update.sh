@@ -15,7 +15,7 @@ Log() {
 ###
 # Main
 ###
-DOCS_DIR="${1}:${PWD}"
+DOCS_DIR="${1:-$PWD}"
 source /etc/os-release
 
 # On Red Hat family systems, detect if selinux is enabled
